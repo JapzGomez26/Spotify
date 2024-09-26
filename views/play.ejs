@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing: <%= song.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="flex flex-col items-center justify-center min-h-screen">
+        <h1 class="text-4xl font-bold mb-4">Now Playing: <%= song.title %></h1>
+        <img src="<%= song.imageFilePath || 'https://via.placeholder.com/200' %>" alt="Album Cover" class="w-48 h-48 mb-4 rounded-lg">
+
+        <audio id="audioPlayer" controls autoplay>
+            <source src="<%= song.songFilePath %>" type="audio/mpeg">
+            Your browser does not support the audio tag.
+        </audio>
+
+        <div class="flex items-center justify-between mt-6 w-full max-w-lg">
+            <button id="prevBtn" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">Previous</button>
+            <button id="nextBtn" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">Next</button>
+        </div>
+
+        <div class="mt-8 text-center">
+            <h2 class="text-2xl font-semibold">Artist: <%= song.artist %></h2>
+            <p class="text-gray-400">Album: <%= song.album %></p>
+        </div>
+
+        <div class="mt-6"></div>
+            <button onclick="window.location.href='/songs'" class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const songs = <%- JSON.stringify(songs) %>; // Pass the songs array to JavaScript
+
+        document.getElementById('prevBtn').onclick = function() {
+            const currentIndex = songs.findIndex(s => s.id == <%= song.id %>);
+            const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
+            window.location.href = `/songs/play/${songs[prevIndex].id}`;
+        };
+
+        document.getElementById('nextBtn').onclick = function() {
+            const currentIndex = songs.findIndex(s => s.id == <%= song.id %>);
+            const nextIndex = (currentIndex + 1) % songs.length;
+            window.location.href = `/songs/play/${songs[nextIndex].id}`;
+        };
+    </script>
+</body>
+</html>
